@@ -1,0 +1,46 @@
+---
+# defaults file for rhv-ocp
+
+# In addition to these default values, you need the username / password to authenticate
+# against the RHV API.
+# This could vary depending on your cluster's config, but the default value for username
+# is 'admin@internal' and the password is set when you deploy the cluster.
+
+instance_description: Created by Ansible Tower on {{ ansible_date_time.date }}
+cluster_name: openshift
+user: jduncan
+domain: redhatgov.io
+
+openshift_nodes:
+  ocp1:
+    role: master
+  ocp2:
+    role: infra
+  ocp3:
+    role: app
+  ocp4:
+    role: app
+  ocp5:
+    role: bastion
+
+# auth vars
+rhv_host: rhv-m.int.jduncan.io
+rhv_auth_url: https://{{ rhv_host }}/ovirt-engine/api
+rhv_admin: admin@internal
+
+# The CA file can be downloaded from the front page of RHV-M
+# By default it looks for it in the below location as part of the role's content
+# Override this with an extra var as needed
+# TODO - make this a little more dynamic
+rhv_ca_file: "{{ role_path }}/files/ca.pem"
+rhv_storage_domain: hosted_storage
+
+# cluster vars
+rhv_cluster: Default
+
+# template vars
+template_name: rhel-7_5
+use_latest_template: true
+
+# instance vars
+instance_state: running

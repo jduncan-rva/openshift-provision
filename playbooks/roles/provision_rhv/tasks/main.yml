@@ -1,0 +1,74 @@
+---
+# tasks file for rhv-ocp
+
+# This stores a fact named 'ovirt_auth' that can be used for the rest of the tasks
+- name: Obtain SSO for RHV
+  ovirt_auth:
+    url: "{{ rhv_auth_url }}"
+    username: "{{ rhv_admin }}"
+    ca_file: "{{ rhv_ca_file }}"
+    password: "{{ rhv_password }}"
+
+- name: get timestamp for cluster uuid
+  set_fact:
+    cluster_uuid: "{{ ansible_date_time.epoch }}"
+
+# I KNOW THIS IS AWFUL.
+# But my brain is fried and I'll find the right regex later - jduncan
+- name: fix domain name for label
+  set_fact:
+    tag_domain_name: "{{ domain | replace('-','_') }}"
+
+- name: final hack for label
+  set_fact:
+    tag_domain_name_final: "{{ tag_domain_name | replace('.','_') }}"
+
+- name: provision instance
+  ovirt_vms:
+    auth: "{{ ovirt_auth }}"
+    state: "{{ instance_state }}"
+    name: "{{ item.key }}"
+    cluster: "{{ rhv_cluster }}"
+    description: "{{ instance_description }} - uuid: {{ cluster_uuid }}"
+    template: "{{ template_name }}"
+    use_latest_template_version: "{{ use_latest_template }}"
+    cloud_init:
+      host_name: "{{ item.key }}"
+  with_dict: "{{ openshift_nodes }}"
+
+- name: create and attach CNS disks
+  ovirt_disk:
+    auth: "{{ ovirt_auth }}"
+    state: attached
+    name: "{{ item.key }}_cns_data"
+    vm_name: "{{ item.key }}"
+    size: 10GiB
+    format: cow
+    interface: virtio
+    storage_domain: "{{ rhv_storage_domain }}"
+  with_dict: "{{ openshift_nodes }}"
+  when: item.value.role == 'infra' or  item.value.role == 'app'
+
+- name: attach cluster name tag
+  ovirt_tags:
+    auth: "{{ ovirt_auth }}"
+    name: "openshift_cluster_name_{{ cluster_name }}"
+    vms: "{{ item.key }}"
+    state: attached
+  with_dict: "{{ openshift_nodes }}"
+
+- name: attach cluster name verbose tag
+  ovirt_tags:
+    auth: "{{ ovirt_auth }}"
+    name: "openshift_cluster_name_{{ cluster_name }}_{{ tag_domain_name_final }}"
+    vms: "{{ item.key }}"
+    state: attached
+  with_dict: "{{ openshift_nodes }}"
+
+- name: attach openshift role tag
+  ovirt_tags:
+    auth: "{{ ovirt_auth }}"
+    name: "openshift_role_{{ item.value.role }}"
+    vms: "{{ item.key }}"
+    state: attached
+  with_dict: "{{ openshift_nodes }}"
