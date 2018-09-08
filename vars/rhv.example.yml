@@ -1,0 +1,34 @@
+---
+
+# The name of the cluster.
+cluster_name: openshift
+
+# The OpenShift version to install
+openshift_version: 3.9
+# The base subdomain to use for your cluster.
+# Example: If you set this to `example.com`, a DNS entry for `<cluster_name>.example.com` will be created)
+openshift_base_domain: example.com
+
+# The email address to use when generating Lets Encrypt certs for the cluster.
+cert_email_address: foo@example.com
+
+# Your RHSM username
+rhsm_username: foo@example.com
+# Your RHSM password
+rhsm_password: P@55w0rD
+# The RHSM pool ID that contains OpenShift subscriptions
+rhsm_pool: ba4e7732f8abcdad545c7f62df736d1f
+
+# The users to create in OpenShift
+openshift_users:
+  - username: admin
+    password: password
+    admin: yes
+  - username: user1
+    password: password
+  - username: user2
+    password: password
+  - username: user3
+    password: password
+
+# RHV information 

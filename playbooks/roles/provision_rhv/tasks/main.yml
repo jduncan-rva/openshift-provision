@@ -13,6 +13,9 @@
   set_fact:
     cluster_uuid: "{{ ansible_date_time.epoch }}"
 
+- name: make sure we're working with the latest inventory
+  meta: refresh_inventory
+
 # I KNOW THIS IS AWFUL.
 # But my brain is fried and I'll find the right regex later - jduncan
 - name: fix domain name for label
@@ -22,6 +25,11 @@
 - name: final hack for label
   set_fact:
     tag_domain_name_final: "{{ tag_domain_name | replace('.','_') }}"
+
+- name: set facts for compatability with aws roles
+  set_fact:
+    cluster_name_verbose: "{{ tag_domain_name_final }}"
+    cluster_group_name: "{{ tag_domain_name_final }}"
 
 - name: provision instance
   ovirt_vms:
@@ -72,3 +80,6 @@
     vms: "{{ item.key }}"
     state: attached
   with_dict: "{{ openshift_nodes }}"
+
+- name: refresh the inventory to reflect the new groups and tags
+  meta: refresh_inventory

@@ -24,9 +24,10 @@ openshift_nodes:
     role: bastion
 
 # auth vars
-rhv_host: rhv-m.int.jduncan.io
+rhv_host: "{{ lookup('env', 'RHV_URL') }}"
 rhv_auth_url: https://{{ rhv_host }}/ovirt-engine/api
-rhv_admin: admin@internal
+rhv_admin: "{{ lookup('env', 'RHV_USER') }}"
+rhv_password: "{{ lookup('env', 'RHV_PASSWORD') }}"
 
 # The CA file can be downloaded from the front page of RHV-M
 # By default it looks for it in the below location as part of the role's content
