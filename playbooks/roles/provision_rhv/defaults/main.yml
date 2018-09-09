@@ -20,8 +20,6 @@ openshift_nodes:
     role: app
   ocp4:
     role: app
-  ocp5:
-    role: bastion
 
 # auth vars
 rhv_host: "{{ lookup('env', 'RHV_URL') }}"
