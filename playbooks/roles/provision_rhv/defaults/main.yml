@@ -22,10 +22,10 @@ openshift_nodes:
     role: app
 
 # auth vars
-rhv_host: "{{ lookup('env', 'RHV_URL') }}"
+# rhv_host: "{{ lookup('env', 'RHV_URL') }}"
 rhv_auth_url: https://{{ rhv_host }}/ovirt-engine/api
-rhv_admin: "{{ lookup('env', 'RHV_USER') }}"
-rhv_password: "{{ lookup('env', 'RHV_PASSWORD') }}"
+# rhv_admin: "{{ lookup('env', 'RHV_USER') }}"
+# rhv_password: "{{ lookup('env', 'RHV_PASSWORD') }}"
 
 # The CA file can be downloaded from the front page of RHV-M
 # By default it looks for it in the below location as part of the role's content
