@@ -57,27 +57,10 @@
   with_dict: "{{ openshift_nodes }}"
   when: item.value.role == 'infra' or  item.value.role == 'app'
 
-- name: attach openshift nodes tag
-  ovirt_tags:
-    auth: "{{ ovirt_auth }}"
-    name: "openshift_nodes"
-    vms: "{{ item.key }}"
-    state: attached
-  with_dict: "{{ openshift_nodes }}"
-  when:  item.value.role == 'infra' or  item.value.role == 'app' or item.value.role == 'master'
-
 - name: attach cluster name tag
   ovirt_tags:
     auth: "{{ ovirt_auth }}"
     name: "openshift_cluster_name_{{ cluster_name }}"
-    vms: "{{ item.key }}"
-    state: attached
-  with_dict: "{{ openshift_nodes }}"
-
-- name: attach cluster name verbose tag
-  ovirt_tags:
-    auth: "{{ ovirt_auth }}"
-    name: "openshift_cluster_name_{{ cluster_name }}_{{ tag_domain_name_final }}"
     vms: "{{ item.key }}"
     state: attached
   with_dict: "{{ openshift_nodes }}"

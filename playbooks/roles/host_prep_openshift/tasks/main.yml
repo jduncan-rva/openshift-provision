@@ -1,5 +1,4 @@
 ---
-
 # There is a current bug with DNSmasq causing things to fail during an
 # OpenShift install. Installing/upgrading and then rebooting the nodes is
 # the current workaround.
@@ -18,14 +17,12 @@
       ignore_errors: yes
       become: yes
 
-    - name: Wait for nodes to boot
-      wait_for:
-        host: "{{ ansible_host }}"
-        port: 22
-        delay: 30
+    - name: Wait for nodes to reboot
+      wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
         timeout: 300
-        search_regex: OpenSSH
-      delegate_to: "{{ (groups.openshift_role_bastion | intersect(groups['openshift_cluster_' + cluster_group_name]))[0] }}"
   when: install_update_dnsmasq.changed
 
 - name: Install Docker

@@ -2,15 +2,10 @@
 - hosts: tag_openshift_cluster_name_openshift
   any_errors_fatal: yes
   roles:
-    - host_prep_general
-
-- hosts: tag_openshift_nodes
-  any_errors_fatal: yes
-  roles:
+    - host_prep_common
     - host_prep_openshift
 
-- hosts: tag_openshift_role_bastion
-  any_errors_fatal: yes
+- hosts: tag_openshift_role_master
   roles:
     - host_prep_bastion
     - install_openshift

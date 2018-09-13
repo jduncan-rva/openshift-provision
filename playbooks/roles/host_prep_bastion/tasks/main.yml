@@ -31,3 +31,4 @@
     dest: ~/.ssh/id_rsa
     mode: 0600
     backup: yes
+  when: provision_type == 'aws'

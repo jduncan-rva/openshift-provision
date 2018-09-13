@@ -1,16 +1,18 @@
 ---
+block:
+  - import_tasks: certs.yml
 
-- import_tasks: certs.yml
 
-- name: Copy Ansible config
-  copy:
-    src: ansible.cfg
-    dest: /etc/ansible/ansible.cfg
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
-  become: yes
+  - name: Copy Ansible config
+    copy:
+      src: ansible.cfg
+      dest: /etc/ansible/ansible.cfg
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    become: yes
+when: provision_type == 'aws'
 
 - name: Copy hosts template
   template:

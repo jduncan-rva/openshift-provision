@@ -1,7 +1,8 @@
 ---
-
-- include_tasks: aws.yml
-  when: provision_type == 'aws'
+- name: Check to see if system is already registered to RHSM
+  command: subscription-manager status
+  register: sub_status
+  ignore_errors: true
 
 - name: Register host to RHSM and attach pool
   redhat_subscription:
@@ -11,6 +12,14 @@
     consumer_name: "{{ rhsm_consumer_name | default(omit) }}"
     state: present
   become: yes
+  when: sub_status.rc == 1
+
+- name: Disable repos for pool ID - useful for Employee SKUS
+  rhsm_repository:
+    name: '*'
+    state: disabled
+  retries: 3
+  become: yes
 
 - name: Enable required repositories
   rhsm_repository:
@@ -18,14 +27,4 @@
     state: enabled
   retries: 3  # This seems to fail sometimes, so lets retry before failing everything
   register: openshift_enable_repos
-  become: yes
-
-- name: Disable non-required repositories
-  rhsm_repository:
-    name: "{{
-      openshift_enable_repos.repositories |
-      map(attribute='id') |
-      difference(openshift_repos) }}"
-    state: disabled
-  retries: 3  # This seems to fail sometimes, so lets retry before failing everything
   become: yes
