@@ -1,5 +1,5 @@
 ---
-block:
+- block:
   - import_tasks: certs.yml
 
 
@@ -12,7 +12,7 @@ block:
       mode: 0644
       backup: yes
     become: yes
-when: provision_type == 'aws'
+  when: provision_type == 'aws'
 
 - name: Copy hosts template
   template:
