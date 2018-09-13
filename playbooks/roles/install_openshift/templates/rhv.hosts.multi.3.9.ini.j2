@@ -49,7 +49,7 @@ ansible_become=yes
 
 # Specify the deployment type. Valid values are origin and openshift-enterprise.
 #openshift_deployment_type=origin
-openshift_deployment_type=openshift-enterprise
+openshift_deployment_type={{ openshift_deployment_type }}
 
 # Specify the generic release of OpenShift to install. This is used mainly just during installation, after which we
 # rely on the version running on the first master. Works best for containerized installs where we can usually
