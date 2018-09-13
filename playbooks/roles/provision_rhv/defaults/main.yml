@@ -14,14 +14,16 @@ domain: redhatgov.io
 openshift_nodes:
   ocp1:
     role: master
+    storage: false
   ocp2:
     role: infra
+    storage: true
   ocp3:
     role: app
+    storage: true
   ocp4:
     role: app
-  ocp5:
-    role: bastion
+    storage: true
 
 # auth vars
 # rhv_host: "{{ lookup('env', 'RHV_URL') }}"

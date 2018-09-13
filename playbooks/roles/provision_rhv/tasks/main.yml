@@ -55,7 +55,16 @@
     interface: virtio
     storage_domain: "{{ rhv_storage_domain }}"
   with_dict: "{{ openshift_nodes }}"
-  when: item.value.role == 'infra' or  item.value.role == 'app'
+  when: item.value.storage == 'true'
+
+- name: attach cluster storage node tag
+  ovirt_tags:
+    auth: "{{ ovirt_auth }}"
+    name: "openshift_cluster_storage"
+    vms: "{{ item.key }}"
+    state: attached
+  with_dict: "{{ openshift_nodes }}"
+  when: item.value.storage == 'true'
 
 - name: attach cluster name tag
   ovirt_tags:

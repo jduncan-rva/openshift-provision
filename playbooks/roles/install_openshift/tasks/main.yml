@@ -16,7 +16,7 @@ when: provision_type == 'aws'
 
 - name: Copy hosts template
   template:
-    src: hosts.{{ cluster_type }}.{{ openshift_version }}.ini.j2
+    src: "{{ provision_type }}.hosts.{{ cluster_type }}.{{ openshift_version }}.ini.j2"
     dest: /etc/ansible/hosts
     owner: root
     group: root
