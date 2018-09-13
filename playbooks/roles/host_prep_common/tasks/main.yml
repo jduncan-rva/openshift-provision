@@ -2,6 +2,10 @@
 - name: Include platform-specific tasks
   include_tasks: "{{ provision_type }}.yml"
 
+- name: Include distro-specific variables
+  include_vars:
+    file: "{{ ansible_distribution }}.yml"
+
 - name: Include distro-specific tasks
   include_tasks: "{{ ansible_distribution }}.yml"
 
