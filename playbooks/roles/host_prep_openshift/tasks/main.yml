@@ -11,7 +11,7 @@
 
 - block:
     - name: Reboot host
-      shell: sleep 30 && shutdown -r now
+      shell: sleep 5 && shutdown -r now
       async: 30
       poll: 0
       ignore_errors: yes
